@@ -29,18 +29,15 @@ public class PersonalFinanceTrackerApplication {
 	public CommandLineRunner trackerDemo(TransactionRepository repository, CategoryRepository cRepository, AppUserRepository uRepository) {
 		return (args) -> {
 			log.info("save a couple of transactions");
-			cRepository.save(new Category("Food"));
-			cRepository.save(new Category("Rent"));
-			cRepository.save(new Category("Salary"));
-			cRepository.save(new Category("Transport"));
-			cRepository.save(new Category("Shopping"));
-			
-			// private String description;
-    		// private LocalDate date;
-    		// private Double amount;
-    		// private String type;
+			cRepository.save(new Category("Food", "Expense"));
+			cRepository.save(new Category("Rent", "Expense"));
+			cRepository.save(new Category("Transport", "Expense"));
+			cRepository.save(new Category("Shopping", "Expense"));
+			cRepository.save(new Category("Salary", "Income"));
+			cRepository.save(new Category("Passive Income", "Income"));
+			cRepository.save(new Category("Portfolio Income", "Income"));
 
-			repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90, "Expense", cRepository.findByName("Food").get(0)));
+			//repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90, "Expense", cRepository.findByName("Food").get(0)));
 			
 			AppUser user1 = new AppUser("user", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "user@gmail.com","USER");
 			AppUser user2 = new AppUser("admin", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "admin@gmail.com","ADMIN");

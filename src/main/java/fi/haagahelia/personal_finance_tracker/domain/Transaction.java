@@ -3,14 +3,18 @@ package fi.haagahelia.personal_finance_tracker.domain;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+
 
 @Entity
 public class Transaction {
@@ -18,8 +22,11 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String description;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull(message = "Date is required")
     private LocalDate date;
-    private Double amount;
+    private double amount;
     private String type;
 
     @ManyToOne

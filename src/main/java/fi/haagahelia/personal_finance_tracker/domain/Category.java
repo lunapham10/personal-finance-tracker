@@ -15,15 +15,17 @@ public class Category {
     private Long categoryid;
 
     private String name;
+    private String type;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private List<Transaction> transactions;
 
     public Category() {}
 
-    public Category(String name) {
+    public Category(String name, String type) {
         super();
         this.name = name;
+        this.type = type;
     }
 
     public Long getCategoryid() {
@@ -50,9 +52,18 @@ public class Category {
         this.transactions = transactions;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "Category [categoryid=" + categoryid + ", name=" + name + "]";
+        return "Category [categoryid=" + categoryid + ", name=" + name + ", type=" + type + ", transactions="
+                + transactions + "]";
     }
 
     

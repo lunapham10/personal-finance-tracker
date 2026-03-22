@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Studentlist</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+</head>
+
+<body>
+	<h1>Add new transaction</h1>
+	<div>
+		<div class="col-md-4">
+
+			<!-- form -->
+			<form th:object="${transaction}" th:action="@{save}" action="#" method="post">
+				<label for="description">Description</label>
+				<input type="text" id="description" th:field="*{description}" class="form-control" />
+				<div style="clear: both; display: block; height: 10px;"></div>
+
+				<label for="date">Date</label>
+				<input type="date" id="date" th:field="*{date}" class="form-control" />
+				<div style="clear: both; display: block; height: 10px;"></div>
+
+				<label for="amount">Amount</label>
+				<input type="number" id="amount" th:field="*{amount}" class="form-control" />
+				<div style="clear: both; display: block; height: 10px;"></div>
+
+				<label for="type">Type</label>
+				<select type="" th:field="*{type}" class="form-control" id="transactionType">
+					<option value="Expense">Expense</option>
+					<option value="Income">Income</option>
+				</select>
+				<div style="clear: both; display: block; height: 10px;"></div>
+
+				<label for="category">Category</label>
+				<select th:field="*{category}" class="form-control" id="categorySelect">
+					<option th:each="cat : ${categories}" th:value="${cat.categoryid}" th:text="${cat.name}"
+						th:data-type="${cat.type}"></option>
+				</select>
+
+				<script>
+					document.getElementById('transactionType').addEventListener('change', function () {
+						var selectedType = this.value;
+						var options = document.getElementById('categorySelect').options;
+
+						for (var i = 0; i < options.length; i++) {
+							var opt = options[i];
+							if (opt.getAttribute('data-type') === selectedType) {
+								opt.style.display = 'block';
+							} else {
+								opt.style.display = 'none';
+							}
+						}
+					});
+				</script>
+				<input type="submit" class="btn btn-success" value="Save"></input>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>
