@@ -71,7 +71,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Double getAmount() {
+    public double getAmount() {
         return amount;
     }
 

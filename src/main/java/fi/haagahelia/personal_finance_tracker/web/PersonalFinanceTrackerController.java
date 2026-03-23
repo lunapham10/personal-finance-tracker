@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import fi.haagahelia.personal_finance_tracker.domain.CategoryRepository;
 import fi.haagahelia.personal_finance_tracker.domain.Transaction;
 import fi.haagahelia.personal_finance_tracker.domain.TransactionRepository;
+
+import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class PersonalFinanceTrackerController {
 
-    @Autowired
     private TransactionRepository repository;
     private CategoryRepository cRepository;
 
@@ -25,15 +26,6 @@ public class PersonalFinanceTrackerController {
         this.repository = repository;
         this.cRepository = cRepository;
     }
-    
-    // @RequestMapping(value = "/details")
-    // public String transactionList(Model model) {
-    //     UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    //     System.out.println("USERNAME:" + user.getUsername());
-    //     model.addAttribute("name", user.getUsername());
-    //     model.addAttribute("transactions", repository.findAll());
-    //     return "transactionlist";
-    // }
 
     @RequestMapping(value = "/details", method = {RequestMethod.GET})
     public String transactionList(Model model){
@@ -51,7 +43,19 @@ public class PersonalFinanceTrackerController {
     @RequestMapping(value = "/save", method=RequestMethod.POST)
     public String save(Transaction transaction) {
         repository.save(transaction);
-        return "redirect:details";
+        return "redirect:/details";
     }
     
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String editTransaction(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("transaction", repository.findById(id).get());
+        model.addAttribute("categories", cRepository.findAll());
+        return "add";
+    }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String deleteTransaction(@PathVariable("id") Long id, Model model) {
+        repository.deleteById(id);
+        return "redirect:../details";
+    }
 }
