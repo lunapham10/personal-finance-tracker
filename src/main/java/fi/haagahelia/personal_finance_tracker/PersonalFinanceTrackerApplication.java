@@ -1,6 +1,6 @@
 package fi.haagahelia.personal_finance_tracker;
 
-import java.time.LocalDate;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

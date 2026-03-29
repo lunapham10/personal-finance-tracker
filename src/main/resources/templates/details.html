@@ -1,45 +1,50 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <title>List of Transactions</title>
-    <link type="text/css" rel="stylesheet"
-      href="/css/bootstrap.min.css"
-      th:href="@{/css/bootstrap.min.css}" />
+	<title>List of Transactions</title>
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
 </head>
+
 <body class="container">
 	<div class="col-md-4">
-		<h1>Personal Finance Tracker</h1>	
+		<h1>Personal Finance Tracker</h1>
 	</div>
-    <div class="col-md-4"> Welcome
-        <span  sec:authentication="name">Name</span>
+	<div class="col-md-4"> Logged in as:
+		<span sec:authentication="name">Name</span>
 	</div>
-    <div class="col-md-4" style="padding:20px 0">
+	<div class="col-md-4" style="padding:20px 0">
 		<form th:action="@{/logout}" method="post">
-			<input type="submit" value="Sign Out" class="btn btn-sm btn-danger"/>
+			<input type="submit" value="Sign Out" class="btn btn-sm btn-danger" />
 		</form>
 	</div>
-    <!-- String description, LocalDate date, Double amount, String type, Category category -->
-    <table class="table table-striped">
+	<!-- String description, LocalDate date, Double amount, String type, Category category -->
+	<table class="table table-striped">
 		<tr>
-		    <th>Description</th>
-		    <th>Date</th>
-            <th>Amount</th>
-            <th>Type</th>
-            <th>Category</th>
-            <!-- <th sec:authorize="hasRole('ADMIN')"> </th> -->
-		</tr>  
-    	<tr th:each = "transaction : ${transactions}">
-    		<td th:text="${transaction.description}"></td>
-    		<td th:text="${transaction.date}"></td>
-            <td th:text="${transaction.amount}"></td>
-            <td th:text="${transaction.type}"></td>
-            <td th:text="${transaction.category.name}"></td>  	
- 				<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${transaction.id})}"  class="btn btn-danger btn-sm">Delete</a></td>
-                <td><a th:href="@{/edit/{id}(id=${transaction.id})}" class="btn btn-danger btn-sm">Edit</a></td>   
-            	
-    	</tr>
-     </table>
-	 <p><a th:href="@{/add}" class="btn btn-success">Add transaction</a></p>    	
+			<th>Description</th>
+			<th>Date</th>
+			<th>Amount</th>
+			<th>Type</th>
+			<th>Category</th>
+			<th>Edit</th>
+			<th>Delete</th>
+			<!-- <th sec:authorize="hasRole('ADMIN')"> </th> -->
+		</tr>
+		<tr th:each="transaction : ${transactions}">
+			<td th:text="${transaction.description}"></td>
+			<td th:text="${transaction.date}"></td>
+			<td th:text="${transaction.amount}"></td>
+			<td th:text="${transaction.type}"></td>
+			<td th:text="${transaction.category.name}"></td>
+			<td><a th:href="@{/edit/{id}(id=${transaction.id})}" class="btn btn-danger btn-sm">Edit</a></td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${transaction.id})}"
+					class="btn btn-danger btn-sm">Delete</a></td>
+		</tr>
+	</table>
+	<p><a th:href="@{/add}" class="btn btn-success">Add transaction</a>
+		<a th:href="@{/addbudget}" class="btn btn-success">Add budget</a>
+	</p>
+	<p><a th:href="@{/result}" class="btn btn-success">Budget tracker</a></p>
 </body>
+
 </html>

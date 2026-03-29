@@ -1,11 +1,12 @@
 package fi.haagahelia.personal_finance_tracker.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.core.context.SecurityContextHolder;
 // import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import fi.haagahelia.personal_finance_tracker.domain.Budget;
+import fi.haagahelia.personal_finance_tracker.domain.BudgetRepository;
 import fi.haagahelia.personal_finance_tracker.domain.CategoryRepository;
 import fi.haagahelia.personal_finance_tracker.domain.Transaction;
 import fi.haagahelia.personal_finance_tracker.domain.TransactionRepository;
@@ -21,10 +22,12 @@ public class PersonalFinanceTrackerController {
 
     private TransactionRepository repository;
     private CategoryRepository cRepository;
+    private BudgetRepository bRepository;
 
-    public PersonalFinanceTrackerController(TransactionRepository repository, CategoryRepository cRepository) {
+    public PersonalFinanceTrackerController(TransactionRepository repository, CategoryRepository cRepository, BudgetRepository bRepository) {
         this.repository = repository;
         this.cRepository = cRepository;
+        this.bRepository = bRepository;
     }
 
     @RequestMapping(value = "/details", method = {RequestMethod.GET})
@@ -57,5 +60,33 @@ public class PersonalFinanceTrackerController {
     public String deleteTransaction(@PathVariable("id") Long id, Model model) {
         repository.deleteById(id);
         return "redirect:../details";
+    }
+
+    @RequestMapping(value = "/addbudget")
+    public String addBudget (Model model){
+        model.addAttribute("budget", new Budget());
+        model.addAttribute("categories", cRepository.findAll());
+        model.addAttribute("budgets", bRepository.findAll());
+        return "addbudget";
+    }
+
+    @RequestMapping(value = "/savebudget", method=RequestMethod.POST)
+    public String saveBudget(Budget budget) {
+        bRepository.save(budget);
+        return "redirect:/addbudget";
+    }
+
+    @RequestMapping(value = "/editbudget/{id}", method = RequestMethod.GET)
+    public String editBudget(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("budget", bRepository.findById(id).get());
+        model.addAttribute("categories", cRepository.findAll());
+        model.addAttribute("budgets", bRepository.findAll());
+        return "addbudget";
+    }
+
+    @RequestMapping(value = "/deletebudget/{id}", method = RequestMethod.GET)
+    public String deleteBudget(@PathVariable("id") Long id, Model model) {
+        bRepository.deleteById(id);
+        return "redirect:../addbudget";
     }
 }

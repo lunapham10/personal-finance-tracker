@@ -16,18 +16,23 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/css/**").permitAll()
-                .anyRequest().authenticated())
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
-                .disable()))
-            .formLogin(formlogin -> formlogin.defaultSuccessUrl("/details",true).permitAll())
-            .logout(logout -> logout.permitAll());
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/css/**", "/h2-console/**").permitAll()
+                        .anyRequest().authenticated())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
+                        .disable()))
+                .formLogin(formlogin -> formlogin.defaultSuccessUrl("/details", true).permitAll())
+                .logout(logout -> logout.permitAll())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**"))
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }
 
-    @Bean BCryptPasswordEncoder passwordEncoder(){
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
