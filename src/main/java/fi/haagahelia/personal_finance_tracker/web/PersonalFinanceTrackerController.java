@@ -1,16 +1,23 @@
 package fi.haagahelia.personal_finance_tracker.web;
 
+import java.security.Principal;
+
 // import org.springframework.security.core.context.SecurityContextHolder;
 // import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
+import fi.haagahelia.personal_finance_tracker.domain.AppUser;
+import fi.haagahelia.personal_finance_tracker.domain.AppUserRepository;
 import fi.haagahelia.personal_finance_tracker.domain.Budget;
 import fi.haagahelia.personal_finance_tracker.domain.BudgetRepository;
 import fi.haagahelia.personal_finance_tracker.domain.CategoryRepository;
 import fi.haagahelia.personal_finance_tracker.domain.Transaction;
 import fi.haagahelia.personal_finance_tracker.domain.TransactionRepository;
+import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +30,13 @@ public class PersonalFinanceTrackerController {
     private TransactionRepository repository;
     private CategoryRepository cRepository;
     private BudgetRepository bRepository;
+    private AppUserRepository uRepository;
 
-    public PersonalFinanceTrackerController(TransactionRepository repository, CategoryRepository cRepository, BudgetRepository bRepository) {
+    public PersonalFinanceTrackerController(TransactionRepository repository, CategoryRepository cRepository, BudgetRepository bRepository, AppUserRepository uRepository) {
         this.repository = repository;
         this.cRepository = cRepository;
         this.bRepository = bRepository;
+        this.uRepository = uRepository;
     }
 
     @RequestMapping(value = "/details", method = {RequestMethod.GET})
@@ -44,7 +53,16 @@ public class PersonalFinanceTrackerController {
     }
 
     @RequestMapping(value = "/save", method=RequestMethod.POST)
-    public String save(Transaction transaction) {
+    public String save(@Valid @ModelAttribute("transaction") Transaction transaction,
+            BindingResult bindingResult, Principal principal) {
+        if (bindingResult.hasErrors()){
+            return "add";
+        }
+
+        String username = principal.getName();
+        AppUser currentUser = uRepository.findByUsername(username);
+        transaction.setUser(currentUser);
+
         repository.save(transaction);
         return "redirect:/details";
     }

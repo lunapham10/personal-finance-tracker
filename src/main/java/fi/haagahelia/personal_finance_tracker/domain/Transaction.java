@@ -14,8 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
 @Entity
 public class Transaction {
     @Id
@@ -33,20 +31,25 @@ public class Transaction {
     @JsonIgnore
     @JoinColumn(name = "transactionid")
     private Category category;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
 
     public Transaction() {
     }
 
-    public Transaction(String description, LocalDate date, Double amount, String type, Category category){
+    public Transaction(String description, LocalDate date, Double amount, String type, Category category,
+            AppUser user) {
         super();
         this.description = description;
         this.date = date;
         this.amount = amount;
         this.type = type;
         this.category = category;
+        this.user = user;
     }
 
-    
     public Long getId() {
         return id;
     }
@@ -75,7 +78,7 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -100,6 +103,13 @@ public class Transaction {
         return "Transaction [id=" + id + ", description=" + description + ", date=" + date + ", amount=" + amount
                 + ", type=" + type + ", category=" + category + "]";
     }
-    
-    
+
+    public AppUser getUser() {
+        return user;
+    }
+
+    public void setUser(AppUser user) {
+        this.user = user;
+    }
+
 }

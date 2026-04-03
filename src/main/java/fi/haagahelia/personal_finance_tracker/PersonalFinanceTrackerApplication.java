@@ -1,7 +1,5 @@
 package fi.haagahelia.personal_finance_tracker;
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import fi.haagahelia.personal_finance_tracker.domain.Category;
 import fi.haagahelia.personal_finance_tracker.domain.CategoryRepository;
@@ -38,9 +37,9 @@ public class PersonalFinanceTrackerApplication {
 			cRepository.save(new Category("Portfolio Income", "Income"));
 
 			//repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90, "Expense", cRepository.findByName("Food").get(0)));
-			
-			AppUser user1 = new AppUser("user", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6", "user@gmail.com","USER");
-			AppUser user2 = new AppUser("admin", "$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C", "admin@gmail.com","ADMIN");
+			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+			AppUser user1 = new AppUser("user", bc.encode("user"), "user@gmail.com","USER");
+			AppUser user2 = new AppUser("admin", bc.encode("admin"), "admin@gmail.com","ADMIN");
 			uRepository.save(user1);
 			uRepository.save(user2);
 			

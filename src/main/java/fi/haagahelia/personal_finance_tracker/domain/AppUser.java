@@ -19,7 +19,7 @@ public class AppUser {
     private String username;
 
     @Column(name = "password", nullable = false)
-    private String passwordHarsh;
+    private String passwordHash;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -31,10 +31,10 @@ public class AppUser {
 
     }
 
-    public AppUser(String username, String passwordHarsh, String email, String role) {
+    public AppUser(String username, String passwordHash, String email, String role) {
         super();
         this.username = username;
-        this.passwordHarsh = passwordHarsh;
+        this.passwordHash = passwordHash;
         this.email = email;
         this.role = role;
     }
@@ -55,12 +55,12 @@ public class AppUser {
         this.username = username;
     }
 
-    public String getPasswordHarsh() {
-        return passwordHarsh;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPasswordHarsh(String passwordHarsh) {
-        this.passwordHarsh = passwordHarsh;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getEmail() {
