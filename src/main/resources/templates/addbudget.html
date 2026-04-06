@@ -34,19 +34,21 @@
 
                 <div style="clear: both; display: block; height: 10px;"></div>
                 <input type="submit" value="Save Budget"></input>
-                <a href="/details" class="btn btn-secondary">Cancel</a>
+                <a href="/details" class="btn btn-primary">Cancel</a>
             </form>
         </div>
     </div>
 
     <table class="table table-striped">
         <tr>
+            <th>User</th>
             <th>Category</th>
             <th>Target Month</th>
             <th>Budget Limit</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
         <tr th:each="budget : ${budgets}">
+            <td th:text="${budget.user?.username}"></td>
             <td th:text="${budget.category.name}"></td>
             <td th:text="${budget.budgetDate}"></td>
             <td th:text="${budget.amount}"></td>

@@ -37,6 +37,7 @@ public class PersonalFinanceTrackerApplication {
 			cRepository.save(new Category("Portfolio Income", "Income"));
 
 			//repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90, "Expense", cRepository.findByName("Food").get(0)));
+			
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 			AppUser user1 = new AppUser("user", bc.encode("user"), "user@gmail.com","USER");
 			AppUser user2 = new AppUser("admin", bc.encode("admin"), "admin@gmail.com","ADMIN");

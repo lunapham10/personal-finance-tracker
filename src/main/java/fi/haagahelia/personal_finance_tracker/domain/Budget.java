@@ -15,7 +15,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-
 @Entity
 public class Budget {
     @Id
@@ -33,13 +32,18 @@ public class Budget {
     @JoinColumn(name = "categoryid")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
     public Budget() {
     }
 
-    public Budget(double amount, YearMonth budgetDate, Category category){
+    public Budget(double amount, YearMonth budgetDate, Category category, AppUser user){
         this.amount = amount;
         this.budgetDate = budgetDate;
         this.category = category;
+        this.user = user;
     }
 
     public Long getBudgetid() {
@@ -74,9 +78,19 @@ public class Budget {
         this.category = category;
     }
 
+    
+
     @Override
     public String toString() {
         return "Budget [budgetid=" + budgetid + ", budgetDate=" + budgetDate +", category=" + category + "]";
+    }
+
+    public AppUser getUser() {
+        return user;
+    }
+
+    public void setUser(AppUser user) {
+        this.user = user;
     }
 
     

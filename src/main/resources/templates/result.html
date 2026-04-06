@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Tracker Expense and Budget</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body class="container">
+    <div class="col-md-4">
+        <h1>Personal Finance Tracker</h1>
+    </div>
+    <div class="col-md-4"> Logged in as:
+        <span sec:authentication="name">Name</span>
+    </div>
+    <div class="col-md-4" style="padding:20px 0">
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out" class="btn btn-sm btn-danger" />
+        </form>
+    </div>
+    <!-- String description, LocalDate date, Double amount, String type, Category category -->
+    <table class="table table-striped">
+        <tr>
+            <th>User</th>
+            <th>Period (YYYY-MM)</th>
+            <th>Category</th>
+            <th>Actual Spent</th>
+            <th>Budget Limit</th>
+            <th>The Difference</th>
+            <th>Usage & Status</th>
+        </tr>
+        <tr th:each="res : ${results}">
+            <td th:text="${res.username}"></td>
+            <td class="fw-bold" th:text="${res.month}"></td>
+            <td th:text="${res.category}"></td>
+            <td th:text="${#numbers.formatDecimal(res.actualSpent, 1, 2)} + ' €'"></td>
+            <td th:text="${#numbers.formatDecimal(res.budgetLimit, 1, 2)} + ' €'"></td>
+            <td th:text="${#numbers.formatDecimal((res.difference), 1, 2)} + ' €'"></td>
+            <td>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        th:style="'width: ' + (${res.percentage} > 100 ? 100 : ${res.percentage}) + '%'"
+                        th:classappend="${res.percentage > 100 ? 'bg-danger' : 'bg-success'}"
+                        th:text="${#numbers.formatDecimal(res.percentage, 1, 0)} + '%'">
+                    </div>
+                </div>
+                <small th:if="${res.percentage > 100}" class="text-danger fw-bold">⚠️ Over Budget!</small>
+                <div th:if="${res.budgetLimit == 0}">
+                    <span class="badge bg-secondary">Unplanned</span>
+                    <small class="text-danger d-block">⚠️ Add budget for this!</small>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <a href="/details" class="btn btn-primary">Cancel</a>
+</body>
+
+</html>
