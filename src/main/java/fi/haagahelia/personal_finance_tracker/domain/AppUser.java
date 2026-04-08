@@ -27,6 +27,15 @@ public class AppUser {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+	
+	@Column(name = "reset_token")
+    private String resetToken;
+	
+	@Column(name = "verification_token")
+    private String verificationToken;
+
     public AppUser(){
 
     }
@@ -77,6 +86,30 @@ public class AppUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     

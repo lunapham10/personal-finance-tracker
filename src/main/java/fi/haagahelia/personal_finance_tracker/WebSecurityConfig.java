@@ -18,7 +18,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/h2-console/**", "/signup", "/saveuser", "/login").permitAll()
+                        .requestMatchers("/css/**", "/h2-console/**", "/signup", "/saveuser", "/login", "/forgot_password", "/reset_password", "/token_error", "/verify_email").permitAll()
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
                         .disable()))
