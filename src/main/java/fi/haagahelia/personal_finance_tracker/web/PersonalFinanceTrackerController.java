@@ -121,9 +121,17 @@ public class PersonalFinanceTrackerController {
 
     @RequestMapping(value = "/editbudget/{id}", method = RequestMethod.GET)
     public String editBudget(@PathVariable("id") Long id, Model model, Principal principal) {
+        String username = principal.getName();
+        AppUser currentUser = uRepository.findByUsername(username);
+
         model.addAttribute("budget", bRepository.findById(id).get());
         model.addAttribute("categories", cRepository.findAll());
-        model.addAttribute("budgets", bRepository.findAll());
+        
+        if (currentUser.getRole().equals("ADMIN")) {
+            model.addAttribute("budgets", bRepository.findAll());
+        } else {
+            model.addAttribute("budgets", bRepository.findByUser(currentUser));
+        }
         return "addbudget";
     }
 
