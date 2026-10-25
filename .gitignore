@@ -34,3 +34,6 @@ build/
 
 data/
 *.db
+
+# Local development secrets
+.env
