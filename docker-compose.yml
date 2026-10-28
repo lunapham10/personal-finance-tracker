@@ -40,6 +40,18 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
 
+  opa:
+    image: openpolicyagent/opa:1.21.3
+    command:
+      - run
+      - --server
+      - --addr=0.0.0.0:8181
+      - /policies
+    volumes:
+      - ./opa/policies:/policies:ro
+    ports:
+      - "127.0.0.1:8181:8181"
+    restart: unless-stopped
 volumes:
   postgres_data:
   keycloak_data:

@@ -1,5 +1,7 @@
 package fi.haagahelia.personal_finance_tracker;
 
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ import fi.haagahelia.personal_finance_tracker.domain.Transaction;
 import fi.haagahelia.personal_finance_tracker.domain.TransactionRepository;
 import fi.haagahelia.personal_finance_tracker.domain.AppUser;
 import fi.haagahelia.personal_finance_tracker.domain.AppUserRepository;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
 public class PersonalFinanceTrackerApplication {
@@ -25,7 +28,9 @@ public class PersonalFinanceTrackerApplication {
 	}
 
 	@Bean
-	public CommandLineRunner trackerDemo(TransactionRepository repository, CategoryRepository cRepository, AppUserRepository uRepository) {
+	@Profile("bootstrap")
+	public CommandLineRunner trackerDemo(TransactionRepository repository, CategoryRepository cRepository,
+			AppUserRepository uRepository) {
 		return (args) -> {
 			log.info("save a couple of transactions");
 			cRepository.save(new Category("Food", "Expense"));
@@ -36,13 +41,40 @@ public class PersonalFinanceTrackerApplication {
 			cRepository.save(new Category("Passive Income", "Income"));
 			cRepository.save(new Category("Portfolio Income", "Income"));
 
-			//repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90, "Expense", cRepository.findByName("Food").get(0)));
-			
+			// repository.save(new Transaction("Breakfast", LocalDate.of(2026, 3, 1), 11.90,
+			// "Expense", cRepository.findByName("Food").get(0)));
+
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-			AppUser user1 = new AppUser("user", bc.encode("user"), "user@gmail.com","USER");
-			AppUser user2 = new AppUser("admin", bc.encode("admin"), "admin@gmail.com","ADMIN");
+			AppUser user1 = new AppUser("user", bc.encode("user"), "user@gmail.com", "USER");
+			user1.setTenantId("tenant-1");
+			AppUser user2 = new AppUser("user2", bc.encode("user2"), "user2@gmail.com", "USER");
+			user2.setTenantId("tenant-2");
+			AppUser admin = new AppUser("admin", bc.encode("admin"), "admin@gmail.com", "ADMIN");
+			admin.setTenantId("tenant-admin");
 			uRepository.save(user1);
 			uRepository.save(user2);
+			uRepository.save(admin);
+
+			Category food = cRepository.findByName("Food").get(0);
+
+			Transaction transaction1 = new Transaction(
+					"Tenant 1 test transaction",
+					LocalDate.of(2026, 10, 1),
+					10.00,
+					"Expense",
+					food,
+					user1);
+
+			Transaction transaction2 = new Transaction(
+					"Tenant 2 test transaction",
+					LocalDate.of(2026, 10, 2),
+					20.00,
+					"Expense",
+					food,
+					user2);
+
+			repository.save(transaction1);
+			repository.save(transaction2);
 			
 			log.info("fetch all books");
 			for (Transaction transaction : repository.findAll()) {

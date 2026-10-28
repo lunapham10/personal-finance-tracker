@@ -15,6 +15,9 @@ public class AppUser {
 
     private Long id;
 
+    @Column(name = "tenant_id", unique = true)
+    private String tenantId;
+
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
@@ -29,14 +32,14 @@ public class AppUser {
 
     @Column(name = "enabled")
     private boolean enabled;
-	
-	@Column(name = "reset_token")
+
+    @Column(name = "reset_token")
     private String resetToken;
-	
-	@Column(name = "verification_token")
+
+    @Column(name = "verification_token")
     private String verificationToken;
 
-    public AppUser(){
+    public AppUser() {
 
     }
 
@@ -112,5 +115,12 @@ public class AppUser {
         this.verificationToken = verificationToken;
     }
 
-    
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
 }

@@ -35,6 +35,7 @@ public class Transaction {
     private Category category;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private AppUser user;
 
