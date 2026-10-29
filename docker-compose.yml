@@ -73,6 +73,7 @@ services:
       - --tls-private-key-file=/tls/opa-server.key
       - --tls-ca-cert-file=/tls/ca.crt
       - --authentication=tls
+      - --set=decision_logs.console=true
       - /policies
     volumes:
       - ./opa/policies:/policies:ro
