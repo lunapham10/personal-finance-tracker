@@ -3,6 +3,7 @@ package fi.haagahelia.personal_finance_tracker.security;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.restclient.autoconfigure.RestClientSsl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -15,11 +16,19 @@ public class OpaAuthorizationService {
     private final RestClient restClient;
 
     public OpaAuthorizationService(
-            @Value("${app.opa.url}") String opaUrl) {
+            @Value("${app.opa.url}") String opaUrl,
+            @Value("${app.opa.ssl-bundle:}") String sslBundle,
+            RestClient.Builder restClientBuilder,
+            RestClientSsl restClientSsl) {
 
-        this.restClient = RestClient.builder()
-                .baseUrl(opaUrl)
-                .build();
+        RestClient.Builder builder = restClientBuilder
+                .baseUrl(opaUrl);
+
+        if (!sslBundle.isBlank()) {
+            builder.apply(restClientSsl.fromBundle(sslBundle));
+        }
+
+        this.restClient = builder.build();
     }
 
     public boolean isAllowed(Map<String, Object> policyInput) {

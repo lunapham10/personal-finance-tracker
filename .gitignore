@@ -37,3 +37,6 @@ data/
 
 # Local development secrets
 .env
+
+# Local mTLS certificate material
+tls/generated/

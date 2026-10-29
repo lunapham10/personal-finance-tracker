@@ -40,18 +40,70 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
 
+
+  opa-tls-init:
+    image: alpine:3.24
+    user: "0:0"
+    command:
+      - sh
+      - -c
+      - |
+        set -eu
+        cp /source/ca.crt /tls/ca.crt
+        cp /source/opa-server.crt /tls/opa-server.crt
+        cp /source/opa-server.key /tls/opa-server.key
+        chown 1000:1000 /tls/ca.crt /tls/opa-server.crt /tls/opa-server.key
+        chmod 0644 /tls/ca.crt /tls/opa-server.crt
+        chmod 0600 /tls/opa-server.key
+    volumes:
+      - ./tls/generated:/source:ro
+      - opa_tls:/tls
+    restart: "no"
+
   opa:
     image: openpolicyagent/opa:1.21.3
+    depends_on:
+      opa-tls-init:
+        condition: service_completed_successfully
     command:
       - run
       - --server
-      - --addr=0.0.0.0:8181
+      - --addr=https://0.0.0.0:8181
+      - --tls-cert-file=/tls/opa-server.crt
+      - --tls-private-key-file=/tls/opa-server.key
+      - --tls-ca-cert-file=/tls/ca.crt
+      - --authentication=tls
       - /policies
     volumes:
       - ./opa/policies:/policies:ro
+      - opa_tls:/tls:ro
     ports:
       - "127.0.0.1:8181:8181"
     restart: unless-stopped
+
+  vault:
+    image: hashicorp/vault:1.21.4
+    container_name: personal-finance-vault
+    restart: unless-stopped
+
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN_ID}
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+
+    ports:
+      - "127.0.0.1:8200:8200"
+
+    cap_add:
+      - IPC_LOCK
 volumes:
   postgres_data:
   keycloak_data:
+  opa_tls:
+
+secrets:
+  opa_server_cert:
+    file: ./tls/generated/opa-server.crt
+  opa_server_key:
+    file: ./tls/generated/opa-server.key
+  opa_ca_cert:
+    file: ./tls/generated/ca.crt
